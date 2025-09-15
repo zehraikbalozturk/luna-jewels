@@ -5,6 +5,7 @@ import { ShoppingCart, Menu, X, Instagram } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { site } from "@/lib/site";
 
+
 const CATEGORIES = [
 { label: "Yeni Gelenler", href: "/shop?sort=new" },
 { label: "Kolye", href: "/shop?cat=kolye" },
@@ -25,8 +26,11 @@ return (
 <div className="h-16 flex items-center justify-between">
 <div className="flex items-center gap-8">
 <Link href="/" className="font-semibold tracking-tight text-xl">
-{site.name}
+  <span className="bg-gradient-to-r from-[color:var(--brand-ink)] to-[color:var(--brand-gold)] bg-clip-text text-transparent">
+    {site.name}
+  </span>
 </Link>
+
 <nav className="hidden md:flex items-center gap-6">
 {CATEGORIES.map((c) => (
 <Link key={c.href} href={c.href} className="text-sm text-gray-700 hover:text-gray-900 relative group">
