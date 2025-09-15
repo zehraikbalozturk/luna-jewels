@@ -1,4 +1,4 @@
-import { PRODUCTS } from "@/data/products";
+import { PRODUCTS } from "../../data/products";
 import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 
@@ -9,6 +9,8 @@ const CATS = [
   { key: "kupe", label: "Küpe" },
   { key: "yuzuk", label: "Yüzük" },
   { key: "halhal", label: "Halhal" },
+  {key: "kolye1", label: "Desenli Kolye" },
+
 ] as const;
 
 type Params = { cat?: string; sort?: string };
