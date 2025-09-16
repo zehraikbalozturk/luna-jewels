@@ -1,14 +1,9 @@
 import ProductCard from "@/components/ProductCard";
+import { PRODUCTS } from "@/data/products";
 import { site } from "@/lib/site";
 
-const demo = [
-  { slug: "zarif-altin-kolye", name: "Zarif Altın Kolye", price: 1899, image: "/demo/kolye.jpg" },
-  { slug: "inci-kupe", name: "İnci Küpe", price: 799, image: "/demo/kupe.jpg" },
-  { slug: "minimal-bileklik", name: "Minimal Bileklik", price: 499, image: "/demo/bileklik.jpg" },
-  { slug: "halhal", name: "Minimal Halhal", price: 329, image: "/demo/halhal.jpg", badge: "Favori" },
-];
-
 export default function Home() {
+  const featured = PRODUCTS.slice(0, 4); // ilk 4 ürünü göster
   return (
     <div className="space-y-10">
       {/* HERO */}
@@ -26,8 +21,7 @@ export default function Home() {
             <a href="/shop" className="px-4 py-2 rounded-xl bg-[color:var(--brand-ink)] text-white text-sm hover:opacity-90 active:scale-[0.99]">
               Koleksiyonu Keşfet
             </a>
-            <a href="https://www.instagram.com/luna.__jewels/" target="_blank" rel="noopener noreferrer"
-               className="px-4 py-2 rounded-xl border text-sm hover:bg-white">
+            <a href="https://www.instagram.com/luna.__jewels/" target="_blank" rel="noopener noreferrer" className="px-4 py-2 rounded-xl border text-sm hover:bg-white">
               Instagram
             </a>
           </div>
@@ -44,7 +38,7 @@ export default function Home() {
           <a href="/shop" className="text-sm text-gray-700 hover:underline">Tümünü gör</a>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {demo.map(p => <ProductCard key={p.slug} {...p} />)}
+          {featured.map(p => <ProductCard key={p.slug} {...p} />)}
         </div>
       </section>
     </div>

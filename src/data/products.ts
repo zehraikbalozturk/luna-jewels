@@ -1,28 +1,40 @@
-export type Product = {
-  slug: string;
+// src/data/products.ts
+
+// 1) Kategori tiplerimiz — şimdilik 5 temel kategori:
+export type Category = "kolye" | "bileklik" | "kupe" | "yuzuk" | "piercing";
+
+// 2) Düzenlemesi kolay form: SLUG YOK! Sadece adı, fiyatı, görseli, kategori.
+type ProductInput = {
   name: string;
-  price: number;
-  image: string;
-  category: "kolye" | "bileklik" | "kupe" | "yuzuk" | "halhal";
-  badge?: string;
+  price: number;         // ₺ fiyat (sayı olarak)
+  image: string;         // /public altına koyduğun yol veya https://...
+  category: Category;
+  badge?: string;        // "Yeni", "Favori" gibi isteğe bağlı etiket
 };
 
-export const PRODUCTS: Product[] = [
-  { slug: "zarif-altin-kolye", name: "Zarif Altın Kolye", price: 250, image: "/demo/kolye.jpg", category: "kolye", badge: "Yeni" },
-  { slug: "inci-kolye", name: "Luna İnci Kolye", price: 125, image: "/demo/kolye.jpg", category: "kolye" },
-  { slug: "kalp-kolye", name: "Kalp Kolye", price: 285, image: "/demo/kolye1.jpg", category: "kolye" },
-  { slug: "ametist-kolye", name: "Ametist Kolye", price: 1290, image: "/demo/kolye.jpg", category: "kolye", badge: "Yeni" },
+// 3) Türkçe karakterleri düzgün URL'e çeviren küçük yardımcı (slugify)
+const TR_MAP: Record<string, string> = {
+  Ç: "c", Ö: "o", Ş: "s", İ: "i", I: "i", Ü: "u", Ğ: "g",
+  ç: "c", ö: "o", ş: "s", ı: "i", ü: "u", ğ: "g",
+};
+const slugify = (s: string) =>
+  s.replace(/[ÇÖŞİIÜĞçöşıüğ]/g, (c) => TR_MAP[c] || c)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
-
-  { slug: "minimal-bileklik", name: "Minimal Bileklik", price: 499, image: "/demo/bileklik.jpg", category: "bileklik" },
-  { slug: "baget-bileklik", name: "Baget Bileklik", price: 649, image: "/demo/bileklik.jpg", category: "bileklik" },
-  { slug: "cift-sirali-bileklik", name: "Çift Sıralı Bileklik", price: 729, image: "/demo/bileklik.jpg", category: "bileklik" },
-
-  { slug: "inci-kupe", name: "İnci Küpe", price: 799, image: "/demo/kupe.jpg", category: "kupe" },
-  { slug: "halka-kupe", name: "Halka Küpe", price: 559, image: "/demo/kupe.jpg", category: "kupe" },
-  { slug: "baget-kupe", name: "Baget Küpe", price: 619, image: "/demo/kupe.jpg", category: "kupe" },
-
-  { slug: "tek-tas", name: "Tek Taş Yüzük", price: 2199, image: "/demo/yuzuk.jpg", category: "yuzuk", badge: "Favori" },
-  { slug: "baget-yuzuk", name: "Baget Yüzük", price: 1749, image: "/demo/yuzuk.jpg", category: "yuzuk" },
-  { slug: "minimal-halhal", name: "Minimal Halhal", price: 329, image: "/demo/halhal.jpg", category: "halhal" },
+// 4) BURAYI DÜZENLEYECEKSİN: Ürünleri buraya tek tek ekliyoruz.
+const INPUT: ProductInput[] = [
+  // ÖRNEKLER — silip kendi ürünlerini yaz
+  { name: "Zarif Altın Kolye", price: 1899, image: "/products/kolye.jpg", category: "kolye", badge: "Yeni" },
+  { name: "İnci Küpe",         price:  799, image: "/products/kupe.jpg",   category: "kupe" },
+  { name: "Minimal Bileklik",  price:  499, image: "/products/bileklik.jpg", category: "bileklik" },
+  { name: "Tek Taş Yüzük",     price: 2199, image: "/products/yuzuk.jpg",  category: "yuzuk", badge: "Favori" },
+  { name: "Minimal Halhal",    price:  329, image: "/products/halhal.jpg", category: "piercing" },
 ];
+
+// 5) Gerçek ürün listemiz — SLUG’u isimden otomatik üretir.
+export const PRODUCTS = INPUT.map((p) => ({ ...p, slug: slugify(p.name) }));
+
+// 6) Tip — başka yerlerde kullanmak istersen:
+export type Product = (typeof PRODUCTS)[number];
