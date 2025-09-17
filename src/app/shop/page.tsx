@@ -4,21 +4,27 @@ import Link from "next/link";
 
 const CATS = [
   { key: "", label: "Tümü" },
-  { key: "kolye", label: "Kolye (Altın + Gümüş)" }, // grup
+  { key: "kolye", label: "Kolye (Altın + Gümüş)" },
   { key: "altin kolye", label: "Altın Kolye" },
   { key: "gumus kolye", label: "Gümüş Kolye" },
-  { key: "bileklik", label: "Bileklik" },
+
+  { key: "bileklik", label: "Bileklik (Altın + Gümüş + Genel)" }, 
+  { key: "altin bileklik", label: "Altın Bileklik" },
+  { key: "gumus bileklik", label: "Gümüş Bileklik" },
+
   { key: "kupe", label: "Küpe" },
   { key: "yuzuk", label: "Yüzük" },
   { key: "piercing", label: "Piercing" },
   { key: "ozel", label: "Kişiye Özel" },
 ] as const;
 
+
 type Params = { cat?: string; sort?: string };
 
 // "kolye" parametresi geldiğinde altın+gümüşü birlikte göster
 const GROUPS: Record<string, string[]> = {
   kolye: ["altin kolye", "gumus kolye"],
+  bileklik: ["altin bileklik", "gumus bileklik"], 
 };
 
 function buildHref(current: Params, next: Partial<Params>) {

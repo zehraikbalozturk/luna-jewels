@@ -4,7 +4,8 @@
 export type Category =
   | "gumus kolye"
   | "altin kolye"
-  | "bileklik"
+  | "altin bileklik"
+  | "gumus bileklik"
   | "kupe"
   | "yuzuk"
   | "piercing"
@@ -35,8 +36,8 @@ const slugify = (s: string) =>
 // 4) ÜRÜNLER — burada rahatça ekle/çıkar/düzenle
 const INPUT: ProductInput[] = [
   
-  { name: "İnci Küpe", price: 799, image: "/products/kupe.jpg", category: "kupe" },
-  { name: "Minimal Bileklik", price: 499, image: "/products/bileklik.jpg", category: "bileklik" },
+  { name: "İnci Küpe", price: 100, image: "/products/kupe.jpg", category: "kupe" },
+  { name: "Gümüş Renk Asansör Zincir Kelebek Zirkon Taşlı 316 L. Çelik Kararmaz Çelik Bileklik", price: 125, image: "/products/bileklik.jpg", category: "gumus bileklik" },
   { name: "Kararmaz Solmaz Çelik Piercing", price: 125, image: "/products/piercing.jpg", category: "piercing" },
   { name: "Gümüş Renk Sf Zincirde Mavi Kalp Gezegen Vip Solmaz Kararmaz Çelik Kolye", price: 200, image: "/products/kolye.jpg", category: "gumus kolye", badge: "Yeni" },
   { name: "Gümüş Renk Boş Düğüm Kalp Model Kadın Bijuteri Kolye", price: 125, image: "/products/kolye2.jpg", category: "gumus kolye" },
