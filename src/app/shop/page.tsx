@@ -1,19 +1,25 @@
-import { PRODUCTS } from "../../data/products";
+import { PRODUCTS } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 
 const CATS = [
   { key: "", label: "Tümü" },
-  { key: "kolye", label: "Kolye" },
+  { key: "kolye", label: "Kolye (Altın + Gümüş)" }, // grup
+  { key: "altin kolye", label: "Altın Kolye" },
+  { key: "gumus kolye", label: "Gümüş Kolye" },
   { key: "bileklik", label: "Bileklik" },
   { key: "kupe", label: "Küpe" },
   { key: "yuzuk", label: "Yüzük" },
-  { key: "halhal", label: "Halhal" },
-  {key: "kolye1", label: "Desenli Kolye" },
-
+  { key: "piercing", label: "Piercing" },
+  { key: "ozel", label: "Kişiye Özel" },
 ] as const;
 
 type Params = { cat?: string; sort?: string };
+
+// "kolye" parametresi geldiğinde altın+gümüşü birlikte göster
+const GROUPS: Record<string, string[]> = {
+  kolye: ["altin kolye", "gumus kolye"],
+};
 
 function buildHref(current: Params, next: Partial<Params>) {
   const p = new URLSearchParams();
@@ -25,15 +31,21 @@ function buildHref(current: Params, next: Partial<Params>) {
   return q ? `/shop?${q}` : "/shop";
 }
 
-export default function Shop({ searchParams }: { searchParams: Params }) {
-  const cat = (searchParams.cat ?? "").toString();
-  const sort = (searchParams.sort ?? "").toString();
+export default async function Shop({ searchParams }: { searchParams: Promise<Params> }) {
+  const sp = await searchParams;
+  const cat = (sp.cat ?? "").toString();
+  const sort = (sp.sort ?? "").toString();
 
-  let list = PRODUCTS.filter(p => !cat || p.category === cat);
+  // kategori filtresi
+  let list = PRODUCTS;
+  if (cat) {
+    if (GROUPS[cat]) list = list.filter((p) => GROUPS[cat].includes(p.category));
+    else list = list.filter((p) => p.category === cat);
+  }
 
-  if (sort === "price-asc") list = [...list].sort((a,b) => a.price - b.price);
-  if (sort === "price-desc") list = [...list].sort((a,b) => b.price - a.price);
-  if (sort === "new") list = [...list]; // demo: yer değiştirmiyoruz
+  // sıralama
+  if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
+  if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
 
   const activeCat = cat || "";
 
@@ -45,12 +57,14 @@ export default function Shop({ searchParams }: { searchParams: Params }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        {CATS.map(c => (
+        {CATS.map((c) => (
           <Link
             key={c.key}
             href={buildHref({ cat, sort }, { cat: c.key })}
             className={`px-3 py-1.5 rounded-full border text-sm ${
-              activeCat === c.key ? "bg-[color:var(--brand-rose)] border-[color:var(--brand-gold)]" : "hover:bg-gray-50"
+              activeCat === c.key
+                ? "bg-[color:var(--brand-rose)] border-[color:var(--brand-gold)]"
+                : "hover:bg-gray-50"
             }`}
           >
             {c.label}
@@ -59,9 +73,8 @@ export default function Shop({ searchParams }: { searchParams: Params }) {
 
         <span className="mx-2 h-5 w-px bg-gray-200" />
 
-        <Link href={buildHref({ cat, sort }, { sort: "new" })} className={`text-sm px-3 py-1.5 rounded-full border ${sort==="new"?"bg-gray-900 text-white":"hover:bg-gray-50"}`}>Yeni</Link>
-        <Link href={buildHref({ cat, sort }, { sort: "price-asc" })} className={`text-sm px-3 py-1.5 rounded-full border ${sort==="price-asc"?"bg-gray-900 text-white":"hover:bg-gray-50"}`}>Fiyat ↑</Link>
-        <Link href={buildHref({ cat, sort }, { sort: "price-desc" })} className={`text-sm px-3 py-1.5 rounded-full border ${sort==="price-desc"?"bg-gray-900 text-white":"hover:bg-gray-50"}`}>Fiyat ↓</Link>
+        <Link href={buildHref({ cat, sort }, { sort: "price-asc" })} className={`text-sm px-3 py-1.5 rounded-full border ${sort === "price-asc" ? "bg-gray-900 text-white" : "hover:bg-gray-50"}`}>Fiyat ↑</Link>
+        <Link href={buildHref({ cat, sort }, { sort: "price-desc" })} className={`text-sm px-3 py-1.5 rounded-full border ${sort === "price-desc" ? "bg-gray-900 text-white" : "hover:bg-gray-50"}`}>Fiyat ↓</Link>
       </div>
 
       {list.length === 0 ? (
